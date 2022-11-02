@@ -15,39 +15,95 @@ namespace pet_hotel.Controllers
     public class PetsController : ControllerBase
     {
         private readonly ApplicationContext _context;
-        public PetsController(ApplicationContext context) {
+
+        public PetsController(ApplicationContext context)
+        {
             _context = context;
         }
 
-        // This is just a stub for GET / to prevent any weird frontend errors that 
+        // This is just a stub for GET / to prevent any weird frontend errors that
         // occur when the route is missing in this controller
         [HttpGet]
-        public IEnumerable<Pet> GetPets() {
-            return new List<Pet>();
+        public IEnumerable<Pet> GetPets()
+        {
+            return _context.Pets.Include(po => po.petOwner).OrderBy(p => p.name).ToArray();
         }
 
-        // [HttpGet]
-        // [Route("test")]
-        // public IEnumerable<Pet> GetPets() {
-        //     PetOwner blaine = new PetOwner{
-        //         name = "Blaine"
-        //     };
+        [HttpGet("{id}")]
+        public Pet getPetById(int id)
+        {
+            Pet myLittlestPet = _context.Pets.SingleOrDefault(p => p.id == id);
+            return myLittlestPet;
+        }
 
-        //     Pet newPet1 = new Pet {
-        //         name = "Big Dog",
-        //         petOwner = blaine,
-        //         color = PetColorType.Black,
-        //         breed = PetBreedType.Poodle,
-        //     };
+        [HttpPost]
+        public IActionResult addNewMyLittlestPet([FromBody] Pet myLittlestPet)
+        {
+            _context.Pets.Add(myLittlestPet);
+            _context.SaveChanges();
+            return CreatedAtAction(
+                nameof(getPetById),
+                new { id = myLittlestPet.id },
+                myLittlestPet
+            );
+        }
 
-        //     Pet newPet2 = new Pet {
-        //         name = "Little Dog",
-        //         petOwner = blaine,
-        //         color = PetColorType.Golden,
-        //         breed = PetBreedType.Labrador,
-        //     };
+        [HttpPut("{id}")]
+        public IActionResult updatePet([FromBody] Pet pet, int id)
+        {
+            if (pet.id != id)
+                return BadRequest();
 
-        //     return new List<Pet>{ newPet1, newPet2};
-        // }
+            Boolean found = _context.Pets.Any(b => b.id == id);
+            if (!found)
+                return NotFound();
+
+            _context.Pets.Update(pet);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult deletePetById(int id)
+        {
+            Pet myBiggestPet = _context.Pets.SingleOrDefault(p => p.id == id);
+
+            if (myBiggestPet == null)
+                return NotFound();
+
+            _context.Pets.Remove(myBiggestPet);
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpPut("{id}/checkin")]
+        public IActionResult checkInPet(int id)
+        {
+            Pet myBiggestPet = _context.Pets.SingleOrDefault(p => p.id == id);
+            //myBiggestPet wasn't bread, soylent green is people!
+            if (myBiggestPet == null)
+                return NotFound();
+
+            myBiggestPet.checkIn();
+
+            _context.Pets.Update(myBiggestPet);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPut("{id}/checkout")]
+        public IActionResult checkOutPet(int id)
+        {
+            Pet myBiggestPet = _context.Pets.SingleOrDefault(p => p.id == id);
+            //myBiggestPet wasn't bread, soylent green is people!
+            if (myBiggestPet == null)
+                return NotFound();
+
+            myBiggestPet.checkOut();
+
+            _context.Pets.Update(myBiggestPet);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }

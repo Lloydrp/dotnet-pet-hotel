@@ -15,6 +15,7 @@ namespace pet_hotel
         Boxer,
         Labrador,
         Retriever,
+        Pug,
     }
 
     public enum PetColorType
@@ -23,7 +24,8 @@ namespace pet_hotel
         Black,
         Golden,
         Tricolor,
-        Spotted
+        Spotted,
+        Fawn,
     }
 
     public class Pet
@@ -39,11 +41,21 @@ namespace pet_hotel
         [Required, JsonConverter(typeof(JsonStringEnumConverter))]
         public PetColorType color { get; set; }
 
-        public DateTime? checkedInAt {get; set;}
+        public DateTime? checkedInAt { get; set; }
 
         public PetOwner petOwner { get; set; }
 
         [ForeignKey("PetOwners")]
         public int petOwnerid { get; set; }
+
+        public void checkIn()
+        {
+            this.checkedInAt = DateTime.Now;
+        }
+
+        public void checkOut()
+        {
+            this.checkedInAt = null;
+        }
     }
 }

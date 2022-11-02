@@ -27,5 +27,44 @@ namespace pet_hotel.Controllers
             .Include(pet => pet.pets)
             .ToList();
         }
+
+        [HttpGet("{id}")]
+        public PetOwner getPetOwnerbyId(int id)
+        {
+            return _context.PetOwners.Include(pet => pet.pets).SingleOrDefault(p => p.id == id);
+        }
+
+        [HttpPost]
+        public IActionResult addPetOwner([FromBody] PetOwner petOwner)
+        {
+            _context.PetOwners.Add(petOwner);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(getPetOwnerbyId), new { id = petOwner.id }, petOwner);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult deletePetOwnerById(int id)
+        {
+            PetOwner myLittlestPetOwner = _context.PetOwners.SingleOrDefault(p => p.id == id);
+            if (myLittlestPetOwner == null)
+            {
+                return NotFound();
+            }
+            _context.PetOwners.Remove(myLittlestPetOwner);
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult updatePetOwner([FromBody] PetOwner petOwner, int id) {
+            if (petOwner.id != id) return BadRequest();
+
+            Boolean found = _context.PetOwners.Any(b => b.id == id);
+            if (!found) return NotFound();
+
+            _context.PetOwners.Update(petOwner);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }

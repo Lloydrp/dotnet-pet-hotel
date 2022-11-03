@@ -31,7 +31,9 @@ namespace pet_hotel.Controllers
         [HttpGet("{id}")]
         public PetOwner getPetOwnerbyId(int id)
         {
-            return _context.PetOwners.Include(pet => pet.pets).SingleOrDefault(p => p.id == id);
+            return _context.PetOwners
+            .Include(pet => pet.pets)
+            .SingleOrDefault(p => p.id == id);
         }
 
         [HttpPost]
@@ -64,10 +66,8 @@ namespace pet_hotel.Controllers
 
             _context.PetOwners.Update(petOwner);
             _context.SaveChanges();
-            // var updatedOwner =
 
             return Ok(petOwner);
-            // return CreatedAtAction(nameof(getPetOwnerbyId), petOwner);
         }
     }
 }

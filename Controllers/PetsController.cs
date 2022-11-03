@@ -26,23 +26,26 @@ namespace pet_hotel.Controllers
         [HttpGet]
         public IEnumerable<Pet> GetPets()
         {
-            return _context.Pets.Include(po => po.petOwner).OrderBy(p => p.name).ToArray();
+            return _context.Pets.Include(p => p.petOwner).OrderBy(p => p.name).ToArray();
         }
 
         [HttpGet("{id}")]
         public Pet getPetById(int id)
         {
-            Pet myLittlestPet = _context.Pets.SingleOrDefault(p => p.id == id);
+            Pet myLittlestPet = _context.Pets
+                .Include(p => p.petOwner)
+                .SingleOrDefault(p => p.id == id);
             return myLittlestPet;
         }
 
         [HttpPost]
         public IActionResult addNewMyLittlestPet([FromBody] Pet myLittlestPet)
         {
-            _context.Pets.Add(myLittlestPet);
+            _context.Add(myLittlestPet);
             _context.SaveChanges();
+
             return CreatedAtAction(
-                nameof(getPetById),
+                nameof(getPetById), //just for sending a header url thingy, doesn't !not call function.
                 new { id = myLittlestPet.id },
                 myLittlestPet
             );
@@ -60,7 +63,7 @@ namespace pet_hotel.Controllers
 
             _context.Pets.Update(pet);
             _context.SaveChanges();
-            return Ok();
+            return Ok(pet);
         }
 
         [HttpDelete("{id}")]
@@ -88,7 +91,7 @@ namespace pet_hotel.Controllers
 
             _context.Pets.Update(myBiggestPet);
             _context.SaveChanges();
-            return Ok();
+            return Ok(myBiggestPet);
         }
 
         [HttpPut("{id}/checkout")]
@@ -103,7 +106,7 @@ namespace pet_hotel.Controllers
 
             _context.Pets.Update(myBiggestPet);
             _context.SaveChanges();
-            return Ok();
+            return Ok(myBiggestPet);
         }
     }
 }

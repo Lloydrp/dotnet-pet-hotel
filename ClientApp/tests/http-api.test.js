@@ -7,6 +7,8 @@ let petOwner = null;
 let pet = null;
 
 const SERVER_URL = "http://localhost:5000";
+
+// works in postman with status code 201 and returns the pet owner created.
 test("Create a new pet owner via HTTP POST", async () => {
   // nothing to do yet
   const newOwner = { name: "test owner", emailAddress: "test@example.com" };
@@ -18,6 +20,7 @@ test("Create a new pet owner via HTTP POST", async () => {
   console.log(`Pet Owner created with id ${petOwner.id}`);
   // console.log(response.data);
 });
+
 
 test(`Update the pet owner via HTTP PUT`, async () => {
   const newName = "test owner 2";
@@ -42,6 +45,7 @@ test(`Get the updated pet owner via HTTP GET`, async () => {
   console.log(`Pet Owner with id ${petOwner.id} successfully retrieved.`);
 });
 
+// worked in postman with code 200
 test(`Get all pet owners via HTTP GET`, async () => {
   const response = await axios.get(`${SERVER_URL}/api/petowners/`);
   expect(response.status).toBe(200);
@@ -51,6 +55,7 @@ test(`Get all pet owners via HTTP GET`, async () => {
   console.log(`Pet Owner with id ${petOwner.id} successfully retrieved.`);
 });
 
+// worked in postman with code 200
 test("Get All pet owners via HTTP GET", async () => {
   // nothing to do yet
   const response = await axios.get(`${SERVER_URL}/api/petowners`);
@@ -59,6 +64,7 @@ test("Get All pet owners via HTTP GET", async () => {
 });
 
 /********************* Pets Tests! /**********************/
+// Works in postman
 test("Create a new pet via HTTP POST", async () => {
   // nothing to do yet
   const newPet = {
@@ -83,6 +89,7 @@ test("Create a new pet via HTTP POST", async () => {
   console.log(`Pet created with id ${pet.id} and owner ${petOwner.name}`);
 });
 
+// Works with postman
 test("Update the pet via HTTP PUT", async () => {
   const newName = "Fido II";
   const newPet = { ...pet, name: newName, color: "Black" };

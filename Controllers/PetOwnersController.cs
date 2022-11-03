@@ -64,7 +64,10 @@ namespace pet_hotel.Controllers
 
             _context.PetOwners.Update(petOwner);
             _context.SaveChanges();
-            return Ok();
+            // var updatedOwner =
+
+            return Ok(petOwner);
+            // return CreatedAtAction(nameof(getPetOwnerbyId), petOwner);
         }
     }
 }

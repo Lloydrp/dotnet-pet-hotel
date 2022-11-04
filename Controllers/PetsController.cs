@@ -79,7 +79,7 @@ namespace pet_hotel.Controllers
                 return NotFound();
 
             var newT = new Transaction { };
-            newT.description = $"{myBiggestPet.name} died / or was cooked :(";
+            newT.description = $"{myBiggestPet.name} died or was baked :(";
             newT.timestamp = DateTime.Now;
             _context.Pets.Remove(myBiggestPet);
             _context.Transactions.Add(newT);

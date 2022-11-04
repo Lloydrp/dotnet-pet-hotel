@@ -1,16 +1,23 @@
-import React, { Component } from 'react';
-import PetsTable from './PetsTable';
-import PetOwnersTable from './PetOwnersTable';
-import axios from 'axios';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PetsTable from "./PetsTable";
+import PetOwnersTable from "./PetOwnersTable";
+import TransactionsTable from "./TransactionsTable";
+import axios from "axios";
+import { connect } from "react-redux";
 
 class Home extends Component {
   static displayName = Home.name;
 
   fetchPetOwners = async () => {
-    const response = await axios.get('api/petOwners');
-    this.props.dispatch({ type: 'SET_PETOWNERS', payload: response.data });
-  }
+    const response = await axios.get("api/petOwners");
+    this.props.dispatch({ type: "SET_PETOWNERS", payload: response.data });
+  };
+
+  fetchTransactions = async () => {
+    const response = await axios.get("api/transactions");
+    // console.log(response.data);
+    this.props.dispatch({ type: "SET_TRANSACTIONS", payload: response.data });
+  };
 
   render() {
     return (
@@ -20,6 +27,8 @@ class Home extends Component {
         <PetsTable fetchPetOwners={this.fetchPetOwners} />
         <br />
         <PetOwnersTable fetchPetOwners={this.fetchPetOwners} />
+        <br />
+        <TransactionsTable fetchTransactions={this.fetchTransactions} />
       </>
     );
   }

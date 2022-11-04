@@ -23,5 +23,6 @@ namespace pet_hotel
         {
             get { return pets == null ? 0 : pets.Count; }
         }
+
     }
 }

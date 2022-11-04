@@ -57,5 +57,6 @@ namespace pet_hotel
         {
             this.checkedInAt = null;
         }
+
     }
 }

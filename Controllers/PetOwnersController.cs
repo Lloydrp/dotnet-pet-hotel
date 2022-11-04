@@ -23,23 +23,23 @@ namespace pet_hotel.Controllers
         [HttpGet]
         public IEnumerable<PetOwner> GetPets()
         {
-            return _context.PetOwners
-            .Include(pet => pet.pets)
-            .ToList();
+            return _context.PetOwners.Include(pet => pet.pets).ToList();
         }
 
         [HttpGet("{id}")]
         public PetOwner getPetOwnerbyId(int id)
         {
-            return _context.PetOwners
-            .Include(pet => pet.pets)
-            .SingleOrDefault(p => p.id == id);
+            return _context.PetOwners.Include(pet => pet.pets).SingleOrDefault(p => p.id == id);
         }
 
         [HttpPost]
         public IActionResult addPetOwner([FromBody] PetOwner petOwner)
         {
+            var newT = new Transaction { };
+            newT.description = $"New pet owner: {petOwner.name} added";
+            newT.timestamp = DateTime.Now;
             _context.PetOwners.Add(petOwner);
+            _context.Transactions.Add(newT);
             _context.SaveChanges();
             return CreatedAtAction(nameof(getPetOwnerbyId), new { id = petOwner.id }, petOwner);
         }
@@ -58,11 +58,14 @@ namespace pet_hotel.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult updatePetOwner([FromBody] PetOwner petOwner, int id) {
-            if (petOwner.id != id) return BadRequest();
+        public IActionResult updatePetOwner([FromBody] PetOwner petOwner, int id)
+        {
+            if (petOwner.id != id)
+                return BadRequest();
 
             Boolean found = _context.PetOwners.Any(b => b.id == id);
-            if (!found) return NotFound();
+            if (!found)
+                return NotFound();
 
             _context.PetOwners.Update(petOwner);
             _context.SaveChanges();

@@ -41,7 +41,11 @@ namespace pet_hotel.Controllers
         [HttpPost]
         public IActionResult addNewMyLittlestPet([FromBody] Pet myLittlestPet)
         {
+            var newT = new Transaction { };
+            newT.description = $"New pet added: {myLittlestPet.name}";
+            newT.timestamp = DateTime.Now;
             _context.Add(myLittlestPet);
+            _context.Transactions.Add(newT);
             _context.SaveChanges();
 
             return CreatedAtAction(
@@ -74,7 +78,11 @@ namespace pet_hotel.Controllers
             if (myBiggestPet == null)
                 return NotFound();
 
+            var newT = new Transaction { };
+            newT.description = $"{myBiggestPet.name} died / or was cooked :(";
+            newT.timestamp = DateTime.Now;
             _context.Pets.Remove(myBiggestPet);
+            _context.Transactions.Add(newT);
             _context.SaveChanges();
             return NoContent();
         }
@@ -89,7 +97,11 @@ namespace pet_hotel.Controllers
 
             myBiggestPet.checkIn();
 
+            var newT = new Transaction { };
+            newT.description = $"{myBiggestPet.name} checked in.";
+            newT.timestamp = DateTime.Now;
             _context.Pets.Update(myBiggestPet);
+            _context.Transactions.Add(newT);
             _context.SaveChanges();
             return Ok(myBiggestPet);
         }
@@ -104,7 +116,11 @@ namespace pet_hotel.Controllers
 
             myBiggestPet.checkOut();
 
+            var newT = new Transaction { };
+            newT.description = $"{myBiggestPet.name} checked out.";
+            newT.timestamp = DateTime.Now;
             _context.Pets.Update(myBiggestPet);
+            _context.Transactions.Add(newT);
             _context.SaveChanges();
             return Ok(myBiggestPet);
         }

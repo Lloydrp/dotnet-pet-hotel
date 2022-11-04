@@ -38,6 +38,7 @@ namespace pet_hotel.Controllers
             var newT = new Transaction { };
             newT.description = $"New pet owner: {petOwner.name} added";
             newT.timestamp = DateTime.Now;
+
             _context.PetOwners.Add(petOwner);
             _context.Transactions.Add(newT);
             _context.SaveChanges();
@@ -52,7 +53,13 @@ namespace pet_hotel.Controllers
             {
                 return NotFound();
             }
+
+            var newT = new Transaction { };
+            newT.description = $"Deleted pet owner: {myLittlestPetOwner.name}";
+            newT.timestamp = DateTime.Now;
+
             _context.PetOwners.Remove(myLittlestPetOwner);
+            _context.Transactions.Add(newT);
             _context.SaveChanges();
             return NoContent();
         }
@@ -67,7 +74,13 @@ namespace pet_hotel.Controllers
             if (!found)
                 return NotFound();
 
+            var newT = new Transaction { };
+            newT.description =
+                $"Updated pet owner with: {petOwner.name} {petOwner.emailAddress} information";
+            newT.timestamp = DateTime.Now;
+
             _context.PetOwners.Update(petOwner);
+            _context.Transactions.Add(newT);
             _context.SaveChanges();
 
             return Ok(petOwner);
